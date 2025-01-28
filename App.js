@@ -10,6 +10,7 @@ const App = () => {
   const [currentScreen, setCurrentScreen] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
   const [squares, setSquares] = useState(Array(10).fill(''));
+  const [focusedSquare, setFocusedSquare] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [infoText, setInfoText] = useState('');
   const [infoHeading, setInfoHeading] = useState('');
@@ -51,6 +52,7 @@ const App = () => {
   const handleLogin = async (userData) => {
     setUserId(userData); // Set the user ID
     setIsLoggedIn(true);
+    
     
     // Load the saved squares for this user
     const savedSquares = await AsyncStorage.getItem(`squares_${userData}`);
