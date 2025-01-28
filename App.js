@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, TouchableOpacity, Text, TextInput, Modal, Flat
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import LoginScreen, { initialUserData } from './LoginScreen'; // Import the LoginScreen component
+import LoginScreen from './LoginScreen'; // Import the LoginScreen component
 
 const App = () => {
   const [currentScreen, setCurrentScreen] = useState(1);
@@ -20,10 +20,15 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
   const [userId, setUserId] = useState(null); // Store the current user's ID
   
+  // Function to generate a unique ID for each inventory item
+  const generateUniqueId = () => {
+    return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  };
+
   const inventoryItems = [
-    { id: '1', name: 'Potion', description: 'O Grimório Infinito de Arcanos Primordiais é um artefato mágico absolutamente extraordinário que transcende os limites da compreensão mortal, um livro místico de aproximadamente 50x35x15 centímetros feito com couro de dragão ancestral e páginas tecidas com fios de essência etérea, capaz de se transformar completamente conforme o usuário, mudando sua aparência, peso e dimensões instantaneamente, contendo um conhecimento mágico tão vasto e profundo que cada página representa um universo inteiro de segredos arcanos, com escritas que se movem e se reescrevem magicamente, revelando feitiços perdidos, rituais ancestrais e segredos de civilizações há muito esquecidas, sendo capaz de sussurrar diretamente na mente do seu portador conhecimentos proibidos e mágicas tão poderosas que poderiam destruir ou salvar mundos inteiros, um artefato tão complexo que apenas magos de nível supremo conseguiriam compreender minimamente uma fração de seu potencial infinito e incompreensível', image: require('./assets/potion.png') },
-    { id: '2', name: 'Elixir', description: 'Restores 100 HP and MP', image: require('./assets/elixir.png') },
-    { id: '3', name: 'Sword', description: 'A sharp blade for combat', image: require('./assets/sword.png') },
+    { id: generateUniqueId(), name: 'Potion', description: 'O Grimório Infinito de Arcanos Primordiais é um artefato mágico absolutamente extraordinário que transcende os limites da compreensão mortal, um livro místico de aproximadamente 50x35x15 centímetros feito com couro de dragão ancestral e páginas tecidas com fios de essência etérea, capaz de se transformar completamente conforme o usuário, mudando sua aparência, peso e dimensões instantaneamente, contendo um conhecimento mágico tão vasto e profundo que cada página representa um universo inteiro de segredos arcanos, com escritas que se movem e se reescrevem magicamente, revelando feitiços perdidos, rituais ancestrais e segredos de civilizações há muito esquecidas, sendo capaz de sussurrar diretamente na mente do seu portador conhecimentos proibidos e mágicas tão poderosas que poderiam destruir ou salvar mundos inteiros, um artefato tão complexo que apenas magos de nível supremo conseguiriam compreender minimamente uma fração de seu potencial infinito e incompreensível', image: require('./assets/potion.png') },
+    { id: generateUniqueId(), name: 'Elixir', description: 'Restores 100 HP and MP', image: require('./assets/elixir.png') },
+    { id: generateUniqueId(), name: 'Sword', description: 'A sharp blade for combat', image: require('./assets/sword.png') },
   ];
 
   const labels = [
@@ -34,7 +39,7 @@ const App = () => {
   // Info texts for each label
   const infoTexts = [
     "Mede a sensibilidade do personagem às forças sobrenaturais. Uma PJ com Alma elevada tem mais facilidade em perceber a Realidade e está mais sintonizado com seus poderes intrínsecos.",
-    "Mede o charme, a liderança e o talento retórico do personagem. Uma PJ com Carisma elevado facilmente persuade e manipula os outros.",
+    "Mede o charme, a liderança e o talento retórico do personagem. Uma PJ com Carisma elevada facilmente persuade e manipula os outros.",
     "Mede o controle do personagem sob pressão. Uma PJ com Firmeza elevada é boa em furtividade, furto e outras situações que exigem decisões rápidas em situações de estresse.",
     "Mede a empatia e o instinto do personagem. Uma PJ com Intuição elevada é boa em perceber as intenções e motivos ocultos de outras criaturas inteligentes.",
     "Mede o estado de alerta do personagem. Uma PJ com Percepção elevada é boa em avaliar o ambiente e perceber o que os outros ignoram.",
@@ -52,7 +57,6 @@ const App = () => {
   const handleLogin = async (userData) => {
     setUserId(userData); // Set the user ID
     setIsLoggedIn(true);
-    
     
     // Load the saved squares for this user
     const savedSquares = await AsyncStorage.getItem(`squares_${userData}`);
@@ -78,7 +82,7 @@ const App = () => {
 
   // In the render method
   if (!isLoggedIn) {
-    return <LoginScreen onLogin={handleLogin} initialUserData={initialUserData} />;
+    return <LoginScreen onLogin={handleLogin} />;
   }
 
   const changeScreen = (screenNumber) => {
@@ -134,7 +138,7 @@ const App = () => {
             <Text style={styles.inventoryTitle}>Inventário</Text>
             <FlatList
               data={inventoryItems}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id} // Use unique ID as key
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => openItemModal(item)}>
                   <Text style={styles.itemText}> {item.name}</Text>
@@ -148,6 +152,14 @@ const App = () => {
       {currentScreen === 3 && (
         <Image
           source={require('./assets/image3.jpg')}
+          style={styles.backgroundImage}
+          resizeMode="cover"
+        />
+      )}
+      {/* Background Image for Screen 4 */}
+      {currentScreen === 4 && (
+        <Image
+          source={require('./assets/image4.jpg')}
           style={styles.backgroundImage}
           resizeMode="cover"
         />
@@ -171,7 +183,7 @@ const App = () => {
           <View style={styles.row}>
             {squares.slice(0, 5).map((value, index) => (
               <View key={index} style={styles.squareContainer}>
-                <TouchableOpacity style={styles.square}>
+                <TouchableOpacity style={ styles.square}>
                   <TextInput
                     style={styles.input}
                     value={value}
@@ -234,6 +246,9 @@ const App = () => {
             <Text style={styles.option}>Inventário</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => changeScreen(3)}>
+            <Text style={styles.option}>Ferimentos</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => changeScreen(4)}>
             <Text style={styles.option}>Extras</Text>
           </TouchableOpacity>
         </View>

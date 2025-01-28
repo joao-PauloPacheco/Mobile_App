@@ -1,4 +1,3 @@
-// LoginScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,9 +41,19 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
     }
   }, [initialUserData]);
 
+  // Function to generate a unique ID for each user
+  const generateUniqueId = () => {
+    return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;  
+  };
+
   const handleCreateUser  = async () => {
     if (username) {
-      const newUser  = { name: username, type: userType, info: userInfo }; // Include additional info
+      const newUser  = { 
+        id: generateUniqueId(), // Generate a unique ID
+        name: username,
+        type: userType,
+        info: userInfo 
+      }; // Include additional info
       const updatedUsers = [...users, newUser ]; // Add the new user to the list
       setUsers(updatedUsers); // Update state
       setUsername(''); // Clear the username input
@@ -66,8 +75,8 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
     onLogin(user.name); // Pass the username as user ID
   };
 
-  const handleDeleteUser   = async () => {
-    const updatedUsers = users.filter(user => user.name !== userToDelete.name); // Remove the user from the list
+  const handleDeleteUser  = async () => {
+    const updatedUsers = users.filter(user => user.id !== userToDelete.id); // Remove the user from the list
     setUsers(updatedUsers); // Update state
     setDeleteModalVisible(false); // Close the delete confirmation modal
 
@@ -85,7 +94,7 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
       {/* List of created users */}
       <FlatList
         data={users}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.id} // Use unique ID as key
         renderItem={({ item }) => (
           <View style={styles.userButtonContainer}>
             <TouchableOpacity style={styles.userButton} onPress={() => handleUserPress(item)}>
@@ -97,7 +106,7 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
               setDeleteModalVisible(true);
             }}>
               <Text style={styles.dots}>🗑</Text> {/* Trash icon for delete */}
-            </TouchableOpacity>
+            </ TouchableOpacity>
           </View>
         )}
         style={styles.userList}
@@ -141,7 +150,7 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
               onChangeText={setUserInfo}
             />
             <View style={styles.buttonsContainer}>
-              <Button title="Confirm" onPress={handleCreateUser  } />
+              <Button title="Confirm" onPress={handleCreateUser } />
               <View style={styles.buttonSpacing} />
               <Button title="Cancel" onPress={() => setModalVisible(false)} color="red" />
             </View>
@@ -158,12 +167,12 @@ const LoginScreen = ({ onLogin, initialUserData }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirm Deletion</Text>
-            <Text style={styles.modalText}>Are you sure you want to delete {userToDelete?.name}?</Text>
+            <Text style={styles.modalTitle}>Confirmar Exclusão</Text>
+            <Text style={styles.modalText}>Tem certeza que deseja excluir {userToDelete?.name}?</Text>
             <View style={styles.buttonsContainer}>
-              <Button title="Yes" onPress={handleDeleteUser  } color="green" />
+              <Button title="Sim" onPress={handleDeleteUser } color="green" />
               <View style={styles.buttonSpacing} />
-              <Button title="No" onPress={() => setDeleteModalVisible(false)} color="red" />
+              <Button title="Não" onPress={() => setDeleteModalVisible(false)} color="red" />
             </View>
           </View>
         </View>
@@ -271,6 +280,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     padding: 10,
+    borderRadius: '50%',
   },
   buttonSpacing: {
     width: 20, // Adjust the width for desired spacing
