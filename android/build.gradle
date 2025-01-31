@@ -2,24 +2,23 @@
 
 buildscript {
     ext {
-        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '35.0.0'
-        minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '24')
-        compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '35')
-        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
-        kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.24'
-
-        ndkVersion = "26.1.10909125"
+    buildToolsVersion = findProperty('android.buildToolsVersion') ?: '30.0.3' // Update to a stable version
+    minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '24')
+    compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '33') // Adjust as needed
+    targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '33') // Adjust as needed
+    kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.24'
+    ndkVersion = "26.1.10909125"
+    }   
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle')
+        classpath('com.android.tools.build:gradle:7.0.2') // Specify the version
         classpath('com.facebook.react:react-native-gradle-plugin')
         classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
-        classpath 'com.google.gms:google-services:4.3.10' // Check for the latest version
-        classpath 'com.google.gms:google-services:4.4.2'
+        classpath('com.google.gms:google-services:4.4.2')
     }
 }
 

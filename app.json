@@ -2,6 +2,22 @@
   "expo": {
     "name": "Kult-reactivenative",
     "slug": "Kult-reactivenative",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "8276992d-c857-4e61-8112-95010ca46361"
+      }
+    }
+  },
+  "ios": {
+    "supportsTablet": true
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/capa.jpg",
+      "backgroundColor": "#000000"
+    },
+    "package": "com.kultreactivenative",
+    "versionCode": 1
   }
 }
